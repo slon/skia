@@ -11,7 +11,7 @@ BASE_DIR=`cd $(dirname ${BASH_SOURCE[0]}) && pwd`
 pushd $BASE_DIR/../..
 ./bin/fetch-gn
 
-IS_OFFICIAL_BUILD="true"
+IS_OFFICIAL_BUILD="false"
 IS_DEBUG="false"
 FORCE_TRACING="false"
 PROFILE_BUILD="false"
@@ -207,7 +207,7 @@ echo "Compiling"
   skia_use_dawn=${ENABLE_WEBGPU} \
   skia_use_webgl=${ENABLE_WEBGL} \
   skia_use_webgpu=${ENABLE_WEBGPU} \
-  skia_use_expat=${USE_EXPAT} \
+  skia_use_expat=true \
   skia_use_fontconfig=false \
   skia_use_freetype=true \
   skia_use_libheif=false \
@@ -228,6 +228,7 @@ echo "Compiling"
   skia_use_wuffs=true \
   skia_use_zlib=true \
   skia_enable_ganesh=${ENABLE_GANESH} \
+  skia_enable_svg=true \
   skia_build_for_debugger=${DEBUGGER_ENABLED} \
   skia_enable_sksl_tracing=${ENABLE_SKSL_TRACE} \
   \

@@ -111,6 +111,9 @@ skia_wasm_lib("canvaskit") {
   if (skia_canvaskit_enable_skottie) {
     deps += [ "../../modules/skresources:skresources" ]
   }
+
+  deps += [ "../../modules/svg:svg" ]
+
   if (skia_canvaskit_include_viewer) {
     deps += [ ":viewer_wasm" ]
   }

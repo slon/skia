@@ -448,6 +448,8 @@ export interface CanvasKit {
     MakeManagedAnimation(json: string, assets?: Record<string, ArrayBuffer>,
                          filterPrefix?: string, soundMap?: SoundMap): ManagedSkottieAnimation;
 
+    MakeSVGDOM(svg: string): SVGDOM
+
     // Constructors, i.e. things made with `new CanvasKit.Foo()`;
     readonly ImageData: ImageDataConstructor;
     readonly ParagraphStyle: ParagraphStyleConstructor;
@@ -947,6 +949,10 @@ export interface ManagedSkottieAnimation extends SkottieAnimation {
     getOpacityProps(): OpacityProperty[];
     getTextProps(): TextProperty[];
     getTransformProps(): TransformProperty[];
+}
+
+export interface SVGDOM extends EmbindObject<SVGDOM> {
+    render(canvas: Canvas): void;
 }
 
 /**

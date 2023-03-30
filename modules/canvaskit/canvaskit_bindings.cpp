@@ -61,6 +61,10 @@
 #include "src/image/SkImage_Base.h"
 #include "src/sksl/SkSLCompiler.h"
 
+#include "modules/svg/include/SkSVGSVG.h"
+#include "modules/svg/include/SkSVGDOM.h"
+#include "modules/svg/include/SkSVGNode.h"
+
 #include "modules/canvaskit/WasmCommon.h"
 #include <emscripten.h>
 #include <emscripten/bind.h>
@@ -916,6 +920,12 @@ sk_sp<SkImage> MakeImageFromGenerator(SimpleImageInfo ii, JSObject callbackObj) 
     return SkImages::DeferredFromGenerator(std::move(gen));
 }
 #endif // CK_ENABLE_WEBGL
+
+static sk_sp<SkSVGDOM> MakeSVGDOM(std::string svgText) {
+    auto stream = std::make_unique<SkMemoryStream>(svgText.data(), svgText.size(),
+                                                   /*copyData=*/true);
+    return SkSVGDOM::Builder().make(*stream);
+}
 
 EMSCRIPTEN_BINDINGS(Skia) {
 #ifdef ENABLE_GPU
@@ -2458,4 +2468,11 @@ EMSCRIPTEN_BINDINGS(Skia) {
 #ifdef CK_INCLUDE_PARAGRAPH
     constant("_GlyphRunFlags_isWhiteSpace", (int)skia::textlayout::Paragraph::kWhiteSpace_VisitorFlag);
 #endif
+
+    function("MakeSVGDOM", &MakeSVGDOM);
+    class_<SkSVGDOM>("SVGDOM")
+        .smart_ptr<sk_sp<SkSVGDOM>>("sk_sp<SVGDOM>")
+        .function("render", optional_override([](SkSVGDOM& self, SkCanvas& canvas) {
+            self.render(&canvas);
+        }));
 }
