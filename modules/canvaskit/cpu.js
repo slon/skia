@@ -1,3 +1,4 @@
+
 // Adds compile-time JS functions to augment the CanvasKit interface.
 // Implementations in this file are considerate of GPU builds, i.e. some
 // behavior is predicated on whether or not this is being compiled alongside

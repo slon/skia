@@ -1955,6 +1955,8 @@ export interface Image extends EmbindObject<Image> {
      */
     makeCopyWithDefaultMipmaps(): Image;
 
+    makeTextureImage(ctx: GrDirectContext): Image;
+
     /**
      * Returns this image as a shader with the specified tiling. It will use cubic sampling.
      * @param tx - tile mode in the x direction.

@@ -1529,6 +1529,10 @@ EMSCRIPTEN_BINDINGS(Skia) {
             }
             return toBytes(data);
         }), allow_raw_pointers())
+        .function("makeTextureImage", optional_override([](sk_sp<SkImage> self,
+                                                           GrDirectContext* dContext)->sk_sp<SkImage> {
+            return self->makeTextureImage(dContext, skgpu::Mipmapped::kYes);
+        }), allow_raw_pointers())
 #endif
         .function("makeCopyWithDefaultMipmaps", optional_override([](sk_sp<SkImage> self)->sk_sp<SkImage> {
             return self->withDefaultMipmaps();
@@ -2472,6 +2476,7 @@ EMSCRIPTEN_BINDINGS(Skia) {
     function("MakeSVGDOM", &MakeSVGDOM);
     class_<SkSVGDOM>("SVGDOM")
         .smart_ptr<sk_sp<SkSVGDOM>>("sk_sp<SVGDOM>")
+        .function("containerSize", &SkSVGDOM::containerSize)
         .function("render", optional_override([](SkSVGDOM& self, SkCanvas& canvas) {
             self.render(&canvas);
         }));

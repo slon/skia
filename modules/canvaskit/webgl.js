@@ -94,12 +94,12 @@
 
       CanvasKit.GrDirectContext.prototype.getResourceCacheLimitBytes = function() {
           CanvasKit.setCurrentContext(this._context);
-          this._getResourceCacheLimitBytes();
+          return this._getResourceCacheLimitBytes();
       };
 
       CanvasKit.GrDirectContext.prototype.getResourceCacheUsageBytes = function() {
           CanvasKit.setCurrentContext(this._context);
-          this._getResourceCacheUsageBytes();
+          return this._getResourceCacheUsageBytes();
       };
 
       CanvasKit.GrDirectContext.prototype.releaseResourcesAndAbandonContext = function() {
