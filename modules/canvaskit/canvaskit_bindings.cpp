@@ -943,7 +943,7 @@ public:
         }
 
         fStream = std::make_unique<SkDynamicMemoryWStream>();
-        fCanvas = SkSVGCanvas::Make(SkRect::MakeIWH(fWidth, fHeight), 0);
+        fCanvas = SkSVGCanvas::Make(SkRect::MakeIWH(fWidth, fHeight), fStream.get(), 0);
 
         return result;
     }

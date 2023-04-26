@@ -450,7 +450,7 @@ export interface CanvasKit {
 
     MakeSVGDOM(svg: string): SVGDOM
 
-    MakeSVGCanvas(width: number, height: number): SVGCanvas
+    MakeSVGSurface(width: number, height: number): SVGSurface
 
     // Constructors, i.e. things made with `new CanvasKit.Foo()`;
     readonly ImageData: ImageDataConstructor;
