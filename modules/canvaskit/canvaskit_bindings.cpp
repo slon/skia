@@ -56,6 +56,7 @@
 #include "include/private/SkShadowFlags.h"
 #include "include/utils/SkParsePath.h"
 #include "include/utils/SkShadowUtils.h"
+#include "include/svg/SkSVGCanvas.h"
 #include "src/core/SkPathPriv.h"
 #include "src/core/SkResourceCache.h"
 #include "src/image/SkImage_Base.h"
@@ -920,6 +921,46 @@ sk_sp<SkImage> MakeImageFromGenerator(SimpleImageInfo ii, JSObject callbackObj) 
     return SkImages::DeferredFromGenerator(std::move(gen));
 }
 #endif // CK_ENABLE_WEBGL
+
+class SkSVGSurface : public SkRefCnt {
+public:
+    SkSVGSurface(int width, int height):
+        fWidth(width),
+        fHeight(height) {
+        flush();
+    }
+
+    std::string flush() {
+        std::string result;
+
+        if (fCanvas) {
+            fCanvas.reset();
+
+            auto blob = fStream->detachAsData();
+            fStream.reset();
+
+            result = std::string(reinterpret_cast<const char*>(blob->bytes()), blob->size());
+        }
+
+        fStream = std::make_unique<SkDynamicMemoryWStream>();
+        fCanvas = SkSVGCanvas::Make(SkRect::MakeIWH(fWidth, fHeight), 0);
+
+        return result;
+    }
+
+    SkCanvas* getCanvas() {
+        return fCanvas.get();
+    }
+
+private:
+    const int fWidth, fHeight;
+    std::unique_ptr<SkDynamicMemoryWStream> fStream;
+    std::unique_ptr<SkCanvas> fCanvas;
+};
+
+static sk_sp<SkSVGSurface> MakeSVGSurface(int width, int height) {
+    return sk_sp<SkSVGSurface>(new SkSVGSurface(width, height));
+}
 
 static sk_sp<SkSVGDOM> MakeSVGDOM(std::string svgText) {
     auto stream = std::make_unique<SkMemoryStream>(svgText.data(), svgText.size(),
@@ -2480,4 +2521,10 @@ EMSCRIPTEN_BINDINGS(Skia) {
         .function("render", optional_override([](SkSVGDOM& self, SkCanvas& canvas) {
             self.render(&canvas);
         }));
+
+    function("MakeSVGSurface", &MakeSVGSurface);
+    class_<SkSVGSurface>("SVGSurface")
+        .smart_ptr<sk_sp<SkSVGSurface>>("sk_sp<SkSVGSurface>")
+        .function("getCanvas", &SkSVGSurface::getCanvas, allow_raw_pointers())
+        .function("flush", &SkSVGSurface::flush);
 }

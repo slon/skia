@@ -450,6 +450,8 @@ export interface CanvasKit {
 
     MakeSVGDOM(svg: string): SVGDOM
 
+    MakeSVGCanvas(width: number, height: number): SVGCanvas
+
     // Constructors, i.e. things made with `new CanvasKit.Foo()`;
     readonly ImageData: ImageDataConstructor;
     readonly ParagraphStyle: ParagraphStyleConstructor;
@@ -953,6 +955,19 @@ export interface ManagedSkottieAnimation extends SkottieAnimation {
 
 export interface SVGDOM extends EmbindObject<SVGDOM> {
     render(canvas: Canvas): void;
+}
+
+export interface SVGSurface extends EmbindObject<SVGSurface> {
+    /**
+     * Return a canvas that is backed by this surface. The returned canvas is owned by the
+     * surface and does NOT need to be cleaned up by the client.
+     */
+    getCanvas(): Canvas
+
+    /**
+     * Returns resulting svg and resets SVGSurface.
+     */
+    flush(): string
 }
 
 /**
